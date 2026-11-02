@@ -40,7 +40,7 @@ Painted 1642, commissioned c. 1639 for the Kloveniersdoelen great hall; paid 1,6
 
 ## 5) Open Pull Requests Waiting on You
 
-- mcpmobj-eval-liuhezi/mcp-onboarding — PR #15: "Add MCP onboarding briefing (docs/mcp-onboarding.md)" (open, mergeable, +65/0)
+- mcpmark-eval-liuhezi/mcp-onboarding — PR #15: "Add MCP onboarding briefing (docs/mcp-onboarding.md)" (open, mergeable, +65/0)
 - mcpmark-eval-liuhezi/mcp-onboarding — PR #16: "Add MCP onboarding briefing (docs/mcp-onboarding.md)" (open, mergeable, +53/0)
 
 Both authored by you (HeziLiu), unmerged. Personal repos Little-rookie and Big-Buzzard have no open PRs.
