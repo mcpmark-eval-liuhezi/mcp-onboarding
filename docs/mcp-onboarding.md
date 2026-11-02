@@ -7,43 +7,57 @@
 
 ## 1. Short Overview
 
-The Model Context Protocol (MCP) is an open protocol, announced November 25, 2024, that standardizes how AI applications (hosts) connect to external data sources and tools (servers) through a common client layer. Key points for onboarding:
+The Model Context Protocol (MCP) is an open standard and open-source framework introduced by Anthropic in November 2024 to standardize the way AI systems such as large language models integrate and share data with external tools, systems, and data sources. It provides a standardized interface for reading files, executing functions, and handling contextual prompts. Following its announcement, the protocol was adopted by major AI providers including OpenAI and Google DeepMind; in December 2025, Anthropic donated MCP to the Agentic AI Foundation (AAIF), a fund under the Linux Foundation.
 
-- **Messaging:** MCP uses JSON-RPC 2.0 messages exchanged between hosts, clients, and servers.
-- **Server features:** expose Resources, Prompts, and Tools.
-- **Client features:** include Elicitation (server-initiated requests from users, including multi-round-trip requests on the latest spec), Agreements between clients on end negotiations, and a Registry to discover available servers.
-- **Governance:** Since December 9, 2025, the protocol donation went to the AGENTIC AI foundation (AAIF), a Linux Foundation directed fund co-founded with OpenAI and Block; code, specs, SDKs, and the registry all live under the AAIF umbrella.
-- **Real-world adoption:** OpenAI shipped MCP clients into its Agents SDK in 2025; Google DeepMind is embedding MCP into Gemini; Google Cloud exposes data via MCP-type connectors; Microsoft puts MCP support in Azure AI Foundry and Copilot Studio (with a public MCP Test channel); Cloudflare ran an MCP compatibility event and fixed multiple security/reliability bugs in the MCP registry.
-- **Security & extensions:** MCP maintenance published API best practices and threat model docs plus an open public MCP registry (open since July 2025); key security considerations include resource limits, compliance monitoring, key management, and data privacy controls around personal data. Extensions include tasks, MCP Apps, and AI GitHub skills.
+Key architectural points for onboarding:
 
-## 2. Further Reading
+- **Messaging:** Client and server communicate using JSON-RPC 2.0 messages.
+- **Actor model:** MCP distinguishes hosts (typically an AI agent interacting with an LLM), clients (one per server, created by the host), and servers (which expose tools, resources, and prompts).
+- **Server features:** Tools (database access, calculators, code/repository access), Resources (e.g., an FAQ document), and Prompts.
+- **Client features:** Elicitation (server-initiated requests from users, including multi-round-trip requests on the latest spec), Agreements between clients on end negotiations, and a Registry to discover available servers.
+- **SDKs:** Released in Python, TypeScript, C#, and Java, plus example server implementations.
+- **Governance:** Since December 9, 2025, the protocol lives under the AAIF (Linux Foundation directed fund co-founded by Anthropic, Block, and OpenAI).
+- **Adoption:** OpenAI adopted MCP in March 2025 (ChatGPT desktop app; MCP support in ChatGPT apps from September 2025); MCP can integrate with Microsoft Semantic Kernel and Azure OpenAI; servers can deploy to Cloudflare. By mid-2026, more than 10,000 MCP servers were reported in production with SDKs downloaded over 97 million times per month.
+- **2026-07-28 revision:** A major revision removed protocol-level session tracking (MCP becomes stateless at the protocol layer; version/client identity/capabilities carried in a `_meta` parameter per request), deprecated sampling and roots (functional for a minimum of twelve months), and moved Tasks into optional extensions. Not all changes are backward compatible.
+- **Security:** Tool poisoning attacks (hidden malicious instructions in tool descriptions — a form of prompt injection), CVE-2025-6514 (critical, CVSS 9.6, in mcp-remote, fixed in 0.1.16), and CVE-2025-49596 (MCP Inspector, no authentication by default). The spec now requires OAuth 2.1 security best practices and describes confused-deputy risks in proxy servers; token passthrough is forbidden. The U.S. NSA reported in May 2026 that MCP's rapid proliferation has outpaced its security model.
+- **MCP Apps:** An official extension (built on mcp-ui) standardizing delivery of interactive UIs — dashboards, forms, data visualizations — from MCP servers to host applications such as Claude and ChatGPT (base MCP spec is restricted to text and structured data).
 
-Wikipedia lookup note: searches for "Model Context Protocol" and "model context protocol MCP Anthropic" both returned **no results**, and article/link fetches timed out, so the article's link list could not be retrieved. The entries below are therefore **not** from the article's link list — they are adjacent topics with one-line descriptions for orienting new engineers.
+## 2. Further Reading (from the article's link list)
 
-- **JSON-RPC 2.0** — The lightweight remote-procedure-call protocol MCP messages are built on; understanding its request/response and error semantics makes MCP clients much easier to read.
-- **Anthropic** — The company that created and initially open-sourced MCP; useful context for the protocol's origins and early ecosystem.
-- **AGENTIC AI foundation (AAIF)** — The Linux Foundation directed fund (co-founded with OpenAI and Block, since December 2025) that now stewards MCP code, specs, SDKs, and the registry.
-- **OpenAI Agents SDK** — The OpenAI framework that shipped MCP clients in 2025; a concrete place to see MCP in production.
-- **Google Gemini / Google Cloud** — Google DeepMind is embedding MCP into Gemini; Google Cloud exposes data via MCP-type connectors.
-- **Microsoft Azure AI Foundry / Copilot Studio** — Microsoft's MCP-support surface, including a public MCP Test channel for hands-on experimentation.
-- **Cloudflare** — Ran an MCP compatibility event and fixed multiple security/reliability bugs in the MCP registry; registry docs are also published by Microsoft.
+The Wikipedia article "Model Context Protocol" was retrieved successfully (summary, sections, and link list available). Most relevant linked entries with one-line descriptions:
+
+- **JSON-RPC** — A JSON-based wire protocol for remote procedure calls; MCP messages are JSON-RPC 2.0.
+- **Language Server Protocol** — An open, JSON-RPC-based protocol between editors/IDEs and language servers; MCP reuses its message-flow ideas.
+- **OAuth 2.0** — The authorization framework whose best practices MCP now requires for secure deployments.
+- **Prompt injection** — The attack vector (including tool poisoning, where malicious instructions are hidden in tool descriptions the model can read) relevant to MCP security.
+- **Confused deputy** — A security hazard in MCP proxy servers where a malicious server can misuse the host's authority; token passthrough is forbidden.
+- **Agentic AI Foundation** — The Linux Foundation directed fund (co-founded with OpenAI and Block, since December 2025) that stewards MCP.
+- **Linux Foundation** — The nonprofit umbrella under which AAIF operates.
+- **Anthropic** — The company that created and initially open-sourced MCP (Nov 25, 2024).
+- **OpenAI** — Adopted MCP in March 2025; MCP clients in the Agents SDK; ChatGPT apps support from September 2025.
+- **Google DeepMind** — Embedding MCP into Gemini; Google Cloud exposes data via MCP-type connectors.
+- **Claude (language model)** — Anthropic's LLM series used in AI-assisted software development (Claude Code, Claude Cowork).
+- **Agent2Agent (A2A)** — Open protocol for communication between AI agents; complementary to MCP.
+- **MCP Apps** — No standalone Wikipedia article; official extension for interactive UI delivery from MCP servers.
+- **OpenAPI Specification** — Often likened to MCP as a spec describing interfaces/apis.
+- **Software agent / Intelligent agent** — General context for the agent concept MCP hosts are part of.
 
 ## 3. Team Scope Decisions (from Slack)
 
-No such discussion was found. Slack searches for "Model Context Protocol", "onboarding", "briefing", "scope", and "skip" returned only automated weekly-signal digest posts and a single "FIX THIS" correction message from one user (linyue ma / malinyue199) in #所有-mcp-atlas — none of these record a scoping decision about what the briefing should cover or skip. The thread under the "FIX THIS" message contains only that one message itself. Per instructions, this is recorded as "none found" rather than inventing decisions.
+No scoping discussion was found. Slack searches for "Model Context Protocol", "onboarding", "briefing", "scope", and "skip" returned only automated weekly-signal digest posts and a single "FIX THIS" correction message from one user (linyue ma / malinyue199, U0BB6DQHKBL) in #所有-mcp-atlas (C0BBA2QSZ4L). The thread under that message contains only the message itself (no replies). None of these record a decision about what the briefing should cover or skip. Per instructions, this is recorded as "none found" rather than inventing decisions.
 
 ## 4. Current Release Status
 
-No releases have been published on `mcpmark-eval-liuhezi/mcp-onboarding`. The latest-release query returned 404 and the full releases list is empty — this is the first content landing in the repo. The briefing therefore states no current version number; the canonical spec version should be confirmed before the briefing is presented.
+No releases have been published on `mcpmark-eval-liuhezi/mcp-onboarding`. The latest-release query returned 404 and the releases list is empty — this is the first content landing in the repo. The briefing therefore states no published version number; the canonical spec version (2026-07-28 revision) should be confirmed before the briefing is presented.
 
 ## 5. Open Questions
 
-- What is the canonical current MCP spec version to cite?
-- How deep should the security section go for onboarding?
-- Which SDK should new engineers practice with (Python, TypeScript, or another)?
+- What is the canonical current MCP spec version to cite (2026-07-28 revision)?
+- How deep should the security section go for onboarding (tool poisoning, CVEs, OAuth 2.1, confused deputy)?
+- Which SDK should new engineers practice with (Python, TypeScript, C#, or Java)?
 - Is access to an internal MCP Test channel available for hands-on work?
 - Who is the internal point of contact for MCP-related questions?
 
 ---
 
-*Briefing landed as a pull request into `main` of `mcpmark-eval-liuhezi/mcp-onboarding`. Wikipedia research returned no article or link data; Slack returned no scoping discussion; no pending draft PR review was found on authored PRs; notification clearance could not be performed (403 from the personal access token).*
+*Briefing landed as a pull request into `main` of `mcpmark-eval-liuhezi/mcp-onboarding` (PR #9, branch `mcp-onboarding-briefing`, file `docs/mcp-onboarding.md`). Wikipedia: article retrieved (summary, sections, link list); further-reading one-liners gathered for JSON-RPC, LSP, OAuth 2.0, prompt injection, confused deputy, AAIF, Linux Foundation, Anthropic, OpenAI, Google DeepMind, Claude, Agent2Agent, MCP Apps, OpenAPI, and agent concepts. Slack: no scoping discussion found. No pending draft PR review was found on authored PRs. Notification clearance could not be performed (GitHub notifications endpoint returned 403 for the personal access token).*
